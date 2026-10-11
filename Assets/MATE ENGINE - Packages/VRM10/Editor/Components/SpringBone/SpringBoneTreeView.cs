@@ -5,32 +5,32 @@ using UnityEngine;
 
 namespace UniVRM10
 {
-    public class SpringBoneTreeView : TreeView
+    public class SpringBoneTreeView : TreeView<int>
     {
         public Vrm10Instance Target { get; private set; }
         SerializedObject _so;
 
-        TreeViewItem _root;
-        TreeViewItem _colliderGroups;
-        TreeViewItem _springs;
+        TreeViewItem<int> _root;
+        TreeViewItem<int> _colliderGroups;
+        TreeViewItem<int> _springs;
 
         int _nextNodeID = 0;
 
         Dictionary<int, object> _map = new Dictionary<int, object>();
 
-        public SpringBoneTreeView(TreeViewState state, Vrm10Instance target, SerializedObject so) : base(state)
+        public SpringBoneTreeView(TreeViewState<int> state, Vrm10Instance target, SerializedObject so) : base(state)
         {
             Target = target;
             _so = so;
 
-            _root = new TreeViewItem(_nextNodeID++, -1, "Root");
-            var springBone = new TreeViewItem(_nextNodeID++, 0, "SpringBone");
+            _root = new TreeViewItem<int>(_nextNodeID++, -1, "Root");
+            var springBone = new TreeViewItem<int>(_nextNodeID++, 0, "SpringBone");
             _root.AddChild(springBone);
 
-            _colliderGroups = new TreeViewItem(_nextNodeID++, 1, "ColliderGroups");
+            _colliderGroups = new TreeViewItem<int>(_nextNodeID++, 1, "ColliderGroups");
             springBone.AddChild(_colliderGroups);
 
-            _springs = new TreeViewItem(_nextNodeID++, 1, "Springs");
+            _springs = new TreeViewItem<int>(_nextNodeID++, 1, "Springs");
             springBone.AddChild(_springs);
 
             // load
@@ -44,7 +44,7 @@ namespace UniVRM10
                         var colliderGroup = target.SpringBone.ColliderGroups[i];
                         var name = colliderGroup.GUIName(i);
                         var id = _nextNodeID++;
-                        var item = new TreeViewItem(id, 2, name);
+                        var item = new TreeViewItem<int>(id, 2, name);
                         _map.Add(id, colliderGroup);
                         _colliderGroups.AddChild(item);
                     }
@@ -57,7 +57,7 @@ namespace UniVRM10
                         var spring = target.SpringBone.Springs[i];
                         var name = spring.GUIName(i);
                         var id = _nextNodeID++;
-                        var item = new TreeViewItem(id, 2, name);
+                        var item = new TreeViewItem<int>(id, 2, name);
                         _map.Add(id, spring);
                         _springs.AddChild(item);
                     }
@@ -65,7 +65,7 @@ namespace UniVRM10
             }
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override TreeViewItem<int> BuildRoot()
         {
             return _root;
         }
@@ -246,6 +246,7 @@ namespace UniVRM10
 
         (bool IsActive, bool IsHover) DrawCollider(VRM10SpringBoneCollider collider, Color color)
         {
+            int controlId = collider.GetEntityId().GetHashCode();
             if (Event.current.type == EventType.Repaint || Event.current.type == EventType.Layout)
             {
                 Handles.matrix = collider.transform.localToWorldMatrix;
@@ -254,25 +255,26 @@ namespace UniVRM10
                 {
                     case VRM10SpringBoneColliderTypes.Sphere:
                         // Handles.color = Color.magenta;
-                        Handles.SphereHandleCap(collider.GetInstanceID(), collider.Offset, Quaternion.identity, collider.Radius * 2, Event.current.type);
+                        Handles.SphereHandleCap(controlId, collider.Offset, Quaternion.identity, collider.Radius * 2, Event.current.type);
                         break;
 
                     case VRM10SpringBoneColliderTypes.Capsule:
                         // Handles.color = Color.cyan;
-                        Handles.SphereHandleCap(collider.GetInstanceID(), collider.Offset, Quaternion.identity, collider.Radius * 2, Event.current.type);
-                        Handles.SphereHandleCap(collider.GetInstanceID(), collider.Tail, Quaternion.identity, collider.Radius * 2, Event.current.type);
+                        Handles.SphereHandleCap(controlId, collider.Offset, Quaternion.identity, collider.Radius * 2, Event.current.type);
+                        Handles.SphereHandleCap(controlId, collider.Tail, Quaternion.identity, collider.Radius * 2, Event.current.type);
                         Handles.DrawLine(collider.Offset, collider.Tail);
                         break;
                 }
                 Handles.matrix = Matrix4x4.identity;
             }
 
-            var isHover = HandleUtility.nearestControl == collider.GetInstanceID();
+            var isHover = HandleUtility.nearestControl == controlId;
             return (IsLeftDown() && isHover, isHover);
         }
 
         (bool IsActive, bool IsHover) DrawJoint(VRM10SpringBoneJoint joint, Color color, VRM10SpringBoneJoint head)
         {
+            int controlId = joint.GetEntityId().GetHashCode();
             if (Event.current.type == EventType.Repaint || Event.current.type == EventType.Layout)
             {
 
@@ -280,7 +282,7 @@ namespace UniVRM10
                 {
                     // 先頭
                     Handles.color = color;
-                    Handles.CubeHandleCap(joint.GetInstanceID(), joint.transform.position, joint.transform.rotation,
+                    Handles.CubeHandleCap(controlId, joint.transform.position, joint.transform.rotation,
                         // head の radius
                         joint.m_jointRadius, Event.current.type);
                 }
@@ -291,13 +293,13 @@ namespace UniVRM10
                     Handles.DrawLine(joint.transform.position, head.transform.position);
                     // joint
                     Handles.color = color;
-                    Handles.SphereHandleCap(joint.GetInstanceID(), joint.transform.position, joint.transform.rotation,
+                    Handles.SphereHandleCap(controlId, joint.transform.position, joint.transform.rotation,
                         // head の radius
                         head.m_jointRadius * 2, Event.current.type);
                 }
             }
 
-            var isHover = HandleUtility.nearestControl == joint.GetInstanceID();
+            var isHover = HandleUtility.nearestControl == controlId;
             return (IsLeftDown() && isHover, isHover);
         }
     }
