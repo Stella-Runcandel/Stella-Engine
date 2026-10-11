@@ -84,6 +84,7 @@ Material:
     - _StencilWriteMask: 255
     - _UVSec: 0
     - _UseUIAlphaClip: 0
+    - _XRMotionVectorsPass: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.87646604, g: 0.89808434, b: 1, a: 1}
