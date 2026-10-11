@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using UnityEngine;
 using UniGLTF;
 using System;
@@ -31,7 +31,7 @@ namespace UniVRM10
                 if (_AssetIcon == null)
                 {
                     // try assets
-                    _AssetIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/VRM10/Icons/vrm-48x48.png");
+                    _AssetIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/MATE ENGINE - Packages/VRM10/Icons/vrm-48x48.png");
                 }
                 return _AssetIcon;
             }

@@ -9,12 +9,12 @@ public static class HierarchyTools
 {
     static HierarchyTools()
     {
-        EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyGUI;
+        EditorApplication.hierarchyWindowItemByEntityIdOnGUI += OnHierarchyGUI;
     }
 
-    private static void OnHierarchyGUI(int instanceID, Rect selectionRect)
+    private static void OnHierarchyGUI(EntityId instanceID, Rect selectionRect)
     {
-        GameObject obj = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+        GameObject obj = EditorUtility.EntityIdToObject(instanceID) as GameObject;
         if (obj == null) return;
 
         string name = obj.name;

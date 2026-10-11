@@ -55,14 +55,14 @@ public class MEVoicePack : MonoBehaviour
     private readonly List<(AvatarBigScreenTimer t, List<AudioClip> alarm)> _bigAlarmOriginals = new();
     private readonly List<(MenuAudioHandler h, List<AudioClip> startup, List<AudioClip> open, List<AudioClip> close, List<AudioClip> button, List<AudioClip> toggle, List<AudioClip> slider, List<AudioClip> dropdown)> _menuOriginals = new();
 
-    private readonly HashSet<int> _processedDrag = new();
-    private readonly HashSet<int> _processedPet = new();
-    private readonly HashSet<int> _processedBubble = new();
-    private readonly HashSet<int> _processedRandMsg = new();
-    private readonly HashSet<int> _processedBigTimer = new();
-    private readonly HashSet<int> _processedChatBot = new();
-    private readonly HashSet<int> _processedMenu = new();
-    private readonly HashSet<int> _processedMinecraft = new();
+    private readonly HashSet<EntityId> _processedDrag = new();
+    private readonly HashSet<EntityId> _processedPet = new();
+    private readonly HashSet<EntityId> _processedBubble = new();
+    private readonly HashSet<EntityId> _processedRandMsg = new();
+    private readonly HashSet<EntityId> _processedBigTimer = new();
+    private readonly HashSet<EntityId> _processedChatBot = new();
+    private readonly HashSet<EntityId> _processedMenu = new();
+    private readonly HashSet<EntityId> _processedMinecraft = new();
 
     private bool _applied;
     private Coroutine _watcher;
@@ -220,7 +220,7 @@ public class MEVoicePack : MonoBehaviour
 #endif
             foreach (var d in drags)
             {
-                int id = d.GetInstanceID();
+                EntityId id = d.GetEntityId();
                 if (_processedDrag.Contains(id)) continue;
                 ApplyDragOverridesTo(new[] { d });
                 _processedDrag.Add(id);
@@ -228,7 +228,7 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var p in pets)
             {
-                int id = p.GetInstanceID();
+                EntityId id = p.GetEntityId();
                 if (_processedPet.Contains(id)) continue;
                 if (autoBindAnimator && p.avatarAnimator == null)
                 {
@@ -242,7 +242,7 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var b in bubbles)
             {
-                int id = b.GetInstanceID();
+                EntityId id = b.GetEntityId();
                 if (_processedBubble.Contains(id)) continue;
                 ApplyBubbleOverridesTo(new[] { b });
                 _processedBubble.Add(id);
@@ -250,7 +250,7 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var r in randMsgs)
             {
-                int id = r.GetInstanceID();
+                EntityId id = r.GetEntityId();
                 if (_processedRandMsg.Contains(id)) continue;
                 ApplyRandomMessagesOverridesTo(new[] { r });
                 _processedRandMsg.Add(id);
@@ -258,7 +258,7 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var t in bigs)
             {
-                int id = t.GetInstanceID();
+                EntityId id = t.GetEntityId();
                 if (_processedBigTimer.Contains(id)) continue;
                 ApplyBigScreenTimerOverridesTo(new[] { t });
                 _processedBigTimer.Add(id);
@@ -266,7 +266,7 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var cb in bots)
             {
-                int id = cb.GetInstanceID();
+                EntityId id = cb.GetEntityId();
                 if (_processedChatBot.Contains(id)) continue;
                 ApplyChatBotOverridesTo(new[] { cb });
                 _processedChatBot.Add(id);
@@ -274,14 +274,14 @@ public class MEVoicePack : MonoBehaviour
 
             foreach (var m in menus)
             {
-                int id = m.GetInstanceID();
+                EntityId id = m.GetEntityId();
                 if (_processedMenu.Contains(id)) continue;
                 ApplyMenuAudioOverridesTo(new[] { m });
                 _processedMenu.Add(id);
             }
             foreach (var mc in mcs)
             {
-                int id = mc.GetInstanceID();
+                EntityId id = mc.GetEntityId();
                 if (_processedMinecraft.Contains(id)) continue;
                 ApplyMinecraftOverridesTo(new[] { mc });
                 _processedMinecraft.Add(id);

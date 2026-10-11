@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -124,7 +124,7 @@ namespace Poi.Tools
         /// <param name="path"></param>
         public static void PingAssetAtPath(string path)
         {
-            var inst = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path).GetInstanceID();
+            var inst = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
             EditorGUIUtility.PingObject(inst);
         }
 

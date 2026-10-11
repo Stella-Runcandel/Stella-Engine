@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -155,7 +155,7 @@ public class MEValueChanger : MonoBehaviour
     {
         if (!Application.isPlaying) return;
         if (!showUI) return;
-        windowRect = GUI.Window(GetInstanceID(), windowRect, DrawWindow, "ME Value Changer (Runtime)");
+        windowRect = GUI.Window(GetEntityId().GetHashCode(), windowRect, DrawWindow, "ME Value Changer (Runtime)");
     }
 
     void DrawWindow(int id)

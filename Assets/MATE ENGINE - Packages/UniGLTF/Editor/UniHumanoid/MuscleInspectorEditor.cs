@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +39,7 @@ namespace UniHumanoid
         }
     }
 
-    class BoneTreeViewItem : TreeViewItem
+    class BoneTreeViewItem : TreeViewItem<int>
     {
         //HumanBodyBones m_bone;
 
@@ -49,7 +49,7 @@ namespace UniHumanoid
         }
     }
 
-    class MuscleTreeViewItem : TreeViewItem
+    class MuscleTreeViewItem : TreeViewItem<int>
     {
         public int Muscle
         {
@@ -63,7 +63,7 @@ namespace UniHumanoid
         }
     }
 
-    class BoneTreeView : TreeView
+    class BoneTreeView : TreeView<int>
     {
         static BoneNode Skeleton = new BoneNode(HumanBodyBones.Hips)
         {
@@ -129,21 +129,21 @@ namespace UniHumanoid
             m_updated = false;
         }
 
-        public BoneTreeView(TreeViewState treeViewState, MultiColumnHeader header, HumanPoseHandler handler)
+        public BoneTreeView(TreeViewState<int> treeViewState, MultiColumnHeader header, HumanPoseHandler handler)
             : base(treeViewState, header)
         {
             m_handler = handler;
             Reload();
         }
 
-        protected override TreeViewItem BuildRoot()
+        protected override TreeViewItem<int> BuildRoot()
         {
-            return new TreeViewItem { id = 0, depth = -1 };
+            return new TreeViewItem<int> { id = 0, depth = -1 };
         }
 
-        protected override IList<TreeViewItem> BuildRows(TreeViewItem root)
+        protected override IList<TreeViewItem<int>> BuildRows(TreeViewItem<int> root)
         {
-            var rows = GetRows() ?? new List<TreeViewItem>(200);
+            var rows = GetRows() ?? new List<TreeViewItem<int>>(200);
 
             // We use the GameObject instanceIDs as ids for items as we want to 
             // select the game objects and not the transform components.
@@ -167,10 +167,10 @@ namespace UniHumanoid
             return rows;
         }
 
-        void AddChildrenRecursive(BoneNode bone, TreeViewItem item, IList<TreeViewItem> rows)
+        void AddChildrenRecursive(BoneNode bone, TreeViewItem<int> item, IList<TreeViewItem<int>> rows)
         {
             int childCount = bone.Children.Count;
-            item.children = new List<TreeViewItem>(childCount);
+            item.children = new List<TreeViewItem<int>>(childCount);
             if (bone.Muscles != null)
             {
                 foreach (var muscle in bone.Muscles)
@@ -201,9 +201,9 @@ namespace UniHumanoid
             }
         }
 
-        static TreeViewItem CreateTreeViewItemForBone(HumanBodyBones bone)
+        static TreeViewItem<int> CreateTreeViewItemForBone(HumanBodyBones bone)
         {
-            return new TreeViewItem((int)bone, -1, Enum.GetName(typeof(HumanBodyBones), bone));
+            return new TreeViewItem<int>((int)bone, -1, Enum.GetName(typeof(HumanBodyBones), bone));
         }
 
         protected override void RowGUI(RowGUIArgs args)
@@ -283,7 +283,7 @@ namespace UniHumanoid
     public class MuscleInspectorEditor : Editor
     {
         [NonSerialized] bool m_Initialized;
-        [SerializeField] TreeViewState m_TreeViewState; // Serialized in the window layout file so it survives assembly reloading
+        [SerializeField] TreeViewState<int> m_TreeViewState; // Serialized in the window layout file so it survives assembly reloading
         //[SerializeField] MultiColumnHeaderState m_MultiColumnHeaderState;
         SearchField m_SearchField;
         BoneTreeView m_TreeView;
@@ -321,7 +321,7 @@ namespace UniHumanoid
                 UniGLTF.UniGLTFLogger.Log("MuscleInspectorEditor.OnEnable");
                 m_handler = new HumanPoseHandler(animator.avatar, animator.transform);
 
-                m_TreeView = new BoneTreeView(new TreeViewState(), GetHeaderState(), m_handler);
+                m_TreeView = new BoneTreeView(new TreeViewState<int>(), GetHeaderState(), m_handler);
             }
         }
 

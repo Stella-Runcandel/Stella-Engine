@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -148,7 +148,7 @@ namespace Mochie
         /// <param name="path"></param>
         internal static void PingAssetAtPath(string path)
         {
-            var inst = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path).GetInstanceID();
+            var inst = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
             EditorGUIUtility.PingObject(inst);
         }
 

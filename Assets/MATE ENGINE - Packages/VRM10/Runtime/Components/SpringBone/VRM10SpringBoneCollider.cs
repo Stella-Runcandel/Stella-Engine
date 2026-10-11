@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace UniVRM10
@@ -30,9 +30,9 @@ namespace UniVRM10
 
         public Vector3 TailOrNormal => ColliderType == VRM10SpringBoneColliderTypes.Plane ? Normal : Tail;
 
-        public static int SelectedGuid;
+        public static EntityId SelectedGuid;
 
-        public bool IsSelected => GetInstanceID() == SelectedGuid;
+        public bool IsSelected => GetEntityId() == SelectedGuid;
 
         public void OnValidate()
         {

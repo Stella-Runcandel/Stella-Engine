@@ -14,7 +14,7 @@ namespace Poi.Tools
     {
         private static Vector2 scrollPosition = new Vector2(0,0);
         private static GameObject avatar;
-        private static readonly Dictionary<int, MeshSettings[]> meshSettings = new Dictionary<int, MeshSettings[]>(); // <instanceID, <submesh, setting>>
+        private static readonly Dictionary<EntityId, MeshSettings[]> meshSettings = new Dictionary<EntityId, MeshSettings[]>(); // <entityId, <submesh, setting>>
         private static Dictionary<Mesh, Mesh> bakedMeshes = new Dictionary<Mesh, Mesh>();
         private static int lang = -1;
         private static bool isCancelled = false;
@@ -142,7 +142,7 @@ namespace Poi.Tools
             foreach(SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
                 EditorGUILayout.LabelField(skinnedMeshRenderer.gameObject.name, EditorStyles.boldLabel);
-                int id = skinnedMeshRenderer.gameObject.GetInstanceID();
+                EntityId id = skinnedMeshRenderer.gameObject.GetEntityId();
                 Mesh sharedMesh = skinnedMeshRenderer.sharedMesh;
                 Material[] materials = skinnedMeshRenderer.sharedMaterials;
                 EditorGUI.indentLevel++;
@@ -158,7 +158,7 @@ namespace Poi.Tools
                     continue;
                 }
                 EditorGUILayout.LabelField(meshRenderer.gameObject.name, EditorStyles.boldLabel);
-                int id = meshRenderer.gameObject.GetInstanceID();
+                EntityId id = meshRenderer.gameObject.GetEntityId();
                 Mesh sharedMesh = meshFilter.sharedMesh;
                 Material[] materials = meshRenderer.sharedMaterials;
                 EditorGUI.indentLevel++;
@@ -167,7 +167,7 @@ namespace Poi.Tools
             }
         }
 
-        private static void DrawGUIPerComponent(int id, Mesh sharedMesh, Material[] materials)
+        private static void DrawGUIPerComponent(EntityId id, Mesh sharedMesh, Material[] materials)
         {
             Vector3[] vertices = sharedMesh?.vertices;
             Vector3[] normals = sharedMesh?.normals;
@@ -239,7 +239,7 @@ namespace Poi.Tools
             }
         }
 
-        private static void DrawMeshSettingsGUI(int id, int i, bool hasColors, bool hasUV0)
+        private static void DrawMeshSettingsGUI(EntityId id, int i, bool hasColors, bool hasUV0)
         {
             meshSettings[id][i].isBakeTarget = EditorGUILayout.ToggleLeft(meshSettings[id][i].name, meshSettings[id][i].isBakeTarget);
 
@@ -311,7 +311,7 @@ namespace Poi.Tools
                     continue;
                 }
 
-                int id = skinnedMeshRenderer.gameObject.GetInstanceID();
+                EntityId id = skinnedMeshRenderer.gameObject.GetEntityId();
                 Mesh sharedMesh = skinnedMeshRenderer.sharedMesh;
                 Mesh bakedMesh = bakedSkinnedMeshRenderer.sharedMesh;
                 if(bakedMesh == null || !bakedMesh.name.Contains("(Clone)"))
@@ -349,7 +349,7 @@ namespace Poi.Tools
                     continue;
                 }
 
-                int id = meshRenderer.gameObject.GetInstanceID();
+                EntityId id = meshRenderer.gameObject.GetEntityId();
                 Mesh sharedMesh = meshFilter.sharedMesh;
                 Mesh bakedMesh = bakedMeshFilter.sharedMesh;
                 if(bakedMesh == null || !bakedMesh.name.Contains("(Clone)"))
@@ -481,7 +481,7 @@ namespace Poi.Tools
 
         //------------------------------------------------------------------------------------------------------------------------------
         // Mesh Generator
-        private static void BakeVertexColors(ref Mesh mesh, Mesh sharedMesh, int id)
+        private static void BakeVertexColors(ref Mesh mesh, Mesh sharedMesh, EntityId id)
         {
             if(isCancelled || sharedMesh == null || !sharedMesh.isReadable) return;
             Vector3[] vertices = sharedMesh.vertices;

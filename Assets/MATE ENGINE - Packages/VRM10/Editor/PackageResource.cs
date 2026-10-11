@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 
 namespace UniVRM10
@@ -11,7 +11,7 @@ namespace UniVRM10
         /// <summary>
         /// Local時のAssetPath
         /// </summary>
-        public const string LocalBase = "Assets/VRM10";
+        public const string LocalBase = "Assets/MATE ENGINE - Packages/VRM10";
 
         /// <summary>
         /// UPM参照時のAssetPath
